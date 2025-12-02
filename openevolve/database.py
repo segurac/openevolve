@@ -189,8 +189,16 @@ class ProgramDatabase:
         
         # Novelty judge setup
         from openevolve.embedding import EmbeddingClient
+
         self.novelty_llm = config.novelty_llm
-        self.embedding_client = EmbeddingClient(config.embedding_model) if config.embedding_model else None
+        if config.embedding_model:
+            self.embedding_client = EmbeddingClient(
+                model_name=config.embedding_model,
+                api_base=getattr(config, "embedding_api_base", None),
+                api_key=getattr(config, "embedding_api_key", None),
+            )
+        else:
+            self.embedding_client = None
         self.similarity_threshold = config.similarity_threshold
             
 

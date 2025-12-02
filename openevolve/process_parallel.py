@@ -13,6 +13,8 @@ from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+import multiprocessing as mp
+
 
 from openevolve.config import Config
 from openevolve.database import Program, ProgramDatabase
@@ -345,11 +347,13 @@ class ProcessParallelController:
         import sys
 
         current_env = dict(os.environ)
+        ctx = mp.get_context("spawn")
 
         executor_kwargs = {
             "max_workers": self.num_workers,
             "initializer": _worker_init,
             "initargs": (config_dict, self.evaluation_file, current_env),
+            "mp_context": ctx,
         }
         if sys.version_info >= (3, 11):
             logger.info(f"Set max {self.config.max_tasks_per_child} tasks per child")

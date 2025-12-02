@@ -291,6 +291,8 @@ class DatabaseConfig:
 
     novelty_llm: Optional["LLMInterface"] = None
     embedding_model: Optional[str] = None
+    embedding_api_base: Optional[str] = None
+    embedding_api_key: Optional[str] = None
     similarity_threshold: float = 0.99
 
 
