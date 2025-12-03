@@ -95,7 +95,15 @@ class EmbeddingClient:
                 occurs.
         """
         if isinstance(code, str):
-            code = [code]
+            # Remove pure comment lines (optional leading whitespace + '#') to keep payload small
+            filtered_code = []
+            for line in code.splitlines():
+                stripped = line.lstrip()
+                if stripped.startswith("#") and not stripped.startswith("#!/"):
+                    continue
+                filtered_code.append(line)
+
+            code = ["\n".join(filtered_code)]
             single_code = True
         else:
             single_code = False
